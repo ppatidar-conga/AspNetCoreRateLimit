@@ -1,5 +1,6 @@
 using AspNetCoreRateLimit.Redis;
 using Ben.Diagnostics;
+using Customization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,9 @@ namespace AspNetCoreRateLimit.Demo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddSingleton<ILicenceManager, LicenceManager>();
+
             // configure ip rate limiting middleware
             //services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
             //services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
@@ -66,7 +70,8 @@ namespace AspNetCoreRateLimit.Demo
             app.UseBlockingDetection();
 
             //app.UseIpRateLimiting();
-            app.UseClientRateLimiting();
+            // app.UseClientRateLimiting();
+            app.UseMiddleware<CongaClientRateLimitMiddleware>();
 
             if (env.IsDevelopment())
             {
