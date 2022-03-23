@@ -36,7 +36,18 @@ namespace AspNetCoreRateLimit.Demo
             //services.AddDistributedRateLimiting<RedisProcessingStrategy>();
             var redisOptions = ConfigurationOptions.Parse(Configuration["ConnectionStrings:Redis"]);
             services.AddSingleton<IConnectionMultiplexer>(provider => ConnectionMultiplexer.Connect(redisOptions));
-            services.AddRedisRateLimiting();
+            #region redis limiting registration
+            //services.AddRedisRateLimiting();  //uncomment this 
+            //OR 
+            services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
+            services.AddSingleton<IClientPolicyStore, DistributedCacheClientPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
+            services.AddSingleton<IProcessingStrategy, RedisProcessingStrategy>();
+
+
+            //services.AddDistributedRateLimiting<RedisProcessingStrategy>();
+
+            #endregion
 
             services.AddMvc((options) =>
             {
