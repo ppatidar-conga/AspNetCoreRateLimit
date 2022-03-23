@@ -39,7 +39,7 @@ namespace AspNetCoreRateLimit.Demo
             #region redis limiting registration
             //services.AddRedisRateLimiting();  //uncomment this 
             //OR 
-            services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
+            //services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
             services.AddSingleton<IClientPolicyStore, DistributedCacheClientPolicyStore>();
             services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
             services.AddSingleton<IProcessingStrategy, RedisProcessingStrategy>();

@@ -24,10 +24,10 @@ namespace AspNetCoreRateLimit.Demo
                 await clientPolicyStore.SeedAsync();
 
                 // get the IpPolicyStore instance
-                var ipPolicyStore = scope.ServiceProvider.GetRequiredService<IIpPolicyStore>();
+                //var ipPolicyStore = scope.ServiceProvider.GetRequiredService<IIpPolicyStore>();
 
                 // seed IP data from appsettings
-                await ipPolicyStore.SeedAsync();
+               // await ipPolicyStore.SeedAsync();
             }
 
             await webHost.RunAsync();
