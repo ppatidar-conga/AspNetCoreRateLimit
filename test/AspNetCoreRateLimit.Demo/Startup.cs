@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StackExchange.Redis;
 using System.Collections.Generic;
 
 namespace AspNetCoreRateLimit.Demo
@@ -22,18 +23,20 @@ namespace AspNetCoreRateLimit.Demo
         public void ConfigureServices(IServiceCollection services)
         {
             // configure ip rate limiting middleware
-            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
-            services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
+            //services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+            //services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
 
             // configure client rate limiting middleware
             services.Configure<ClientRateLimitOptions>(Configuration.GetSection("ClientRateLimiting"));
             services.Configure<ClientRateLimitPolicies>(Configuration.GetSection("ClientRateLimitPolicies"));
 
             // register stores
-            services.AddInMemoryRateLimiting();
+            //services.AddInMemoryRateLimiting();
             //services.AddDistributedRateLimiting<AsyncKeyLockProcessingStrategy>();
             //services.AddDistributedRateLimiting<RedisProcessingStrategy>();
-            //services.AddRedisRateLimiting();
+            var redisOptions = ConfigurationOptions.Parse(Configuration["ConnectionStrings:Redis"]);
+            services.AddSingleton<IConnectionMultiplexer>(provider => ConnectionMultiplexer.Connect(redisOptions));
+            services.AddRedisRateLimiting();
 
             services.AddMvc((options) =>
             {
@@ -51,7 +54,7 @@ namespace AspNetCoreRateLimit.Demo
         {
             app.UseBlockingDetection();
 
-            app.UseIpRateLimiting();
+            //app.UseIpRateLimiting();
             app.UseClientRateLimiting();
 
             if (env.IsDevelopment())

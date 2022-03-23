@@ -26,6 +26,7 @@ namespace AspNetCoreRateLimit
                 key += _config.EndpointCounterKeyBuilder.Build(requestIdentity, rule);
             }
 
+            return key;
             var bytes = Encoding.UTF8.GetBytes(key);
 
             using var algorithm = SHA1.Create();
