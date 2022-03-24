@@ -1,16 +1,17 @@
+﻿using AspNetCoreRateLimit;
 using System;
-using System.Security.Cryptography;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AspNetCoreRateLimit
+namespace Customization
 {
-    public abstract class ProcessingStrategy : IProcessingStrategy
+     public abstract class CongaProcessingStrategy : IProcessingStrategy
     {
         private readonly IRateLimitConfiguration _config;
 
-        protected ProcessingStrategy(IRateLimitConfiguration config)
+        protected CongaProcessingStrategy(IRateLimitConfiguration config)
         {
             _config = config;
         }
@@ -26,12 +27,7 @@ namespace AspNetCoreRateLimit
                 key += _config.EndpointCounterKeyBuilder.Build(requestIdentity, rule);
             }
 
-            var bytes = Encoding.UTF8.GetBytes(key);
-
-            using var algorithm = SHA1.Create();
-            var hash = algorithm.ComputeHash(bytes);
-
-            return Convert.ToBase64String(hash);
+            return key;
         }
     }
 }

@@ -46,7 +46,8 @@ namespace AspNetCoreRateLimit.Demo
             //services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
             services.AddSingleton<IClientPolicyStore, DistributedCacheClientPolicyStore>();
             services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
-            services.AddSingleton<IProcessingStrategy, RedisProcessingStrategy>();
+            //services.AddSingleton<IProcessingStrategy, RedisProcessingStrategy>();
+            services.AddSingleton<IProcessingStrategy, CongaRedisProcessingStrategy>();
 
 
             //services.AddDistributedRateLimiting<RedisProcessingStrategy>();
