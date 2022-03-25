@@ -24,7 +24,7 @@ namespace AspNetCoreRateLimit.Demo
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddSingleton<ILicenceManager, LicenceManager>();
+            services.AddSingleton<ILicencingManager, LicencingManager>();
 
             // configure ip rate limiting middleware
             //services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));

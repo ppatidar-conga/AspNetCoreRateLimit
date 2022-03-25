@@ -12,7 +12,7 @@ namespace Customization
     {
         private readonly ClientRateLimitOptions _options;
         private readonly IProcessingStrategy _processingStrategy;
-        private readonly ILicenceManager licenceManager;
+        private readonly ILicencingManager licenceManager;
         private readonly IRateLimitStore<ClientRateLimitPolicy> _policyStore;
         private readonly ICounterKeyBuilder _counterKeyBuilder;
 
@@ -20,7 +20,7 @@ namespace Customization
                 ClientRateLimitOptions options,
                 IClientPolicyStore policyStore,
                 IProcessingStrategy processingStrategy,
-                ILicenceManager licenceManager)
+                ILicencingManager licenceManager)
             : base(options)
         {
             _options = options;
@@ -32,7 +32,7 @@ namespace Customization
 
         public async Task<IEnumerable<RateLimitRule>> GetMatchingRulesAsync(ClientRequestIdentity identity, CancellationToken cancellationToken = default)
         {
-            var tier = this.licenceManager.FindTier(identity.ClientId);
+            var tier =await  this.licenceManager.GetOrganizationRateLimitPlan(identity.ClientId);
             var policy = await _policyStore.GetAsync($"{_options.ClientPolicyPrefix}_{tier}", cancellationToken);
 
             return GetMatchingRules(identity, policy?.Rules);

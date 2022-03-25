@@ -11,14 +11,14 @@ namespace Customization
     public class CongaClientRateLimitMiddleware : RateLimitMiddleware<CongaClientRateLimitProcessor>
     {
         private readonly ILogger<ClientRateLimitMiddleware> _logger;
-        private readonly ILicenceManager licenceManager;
+        private readonly ILicencingManager licenceManager;
 
         public CongaClientRateLimitMiddleware(RequestDelegate next,
             IProcessingStrategy processingStrategy,
             IOptions<ClientRateLimitOptions> options,
             IClientPolicyStore policyStore,
             IRateLimitConfiguration config,
-            ILogger<ClientRateLimitMiddleware> logger, ILicenceManager licenceManager)
+            ILogger<ClientRateLimitMiddleware> logger, ILicencingManager licenceManager)
         : base(next, options?.Value, new CongaClientRateLimitProcessor(options?.Value, policyStore, processingStrategy, licenceManager), config)
         {
             _logger = logger;
