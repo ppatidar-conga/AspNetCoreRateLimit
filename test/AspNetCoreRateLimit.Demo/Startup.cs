@@ -1,6 +1,9 @@
 using AspNetCoreRateLimit.Redis;
 using Ben.Diagnostics;
-using Customization;
+using Conga.Platform.Licencing;
+using Conga.Platform.Licencing.Interfaces;
+using Conga.Platform.RateLimiting.LimitCustomization;
+//using Customization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,46 +26,42 @@ namespace AspNetCoreRateLimit.Demo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddSingleton<ILicencingManager, LicencingManager>();
-
-            // configure ip rate limiting middleware
-            //services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
-            //services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
-
-            // configure client rate limiting middleware
-            services.Configure<ClientRateLimitOptions>(Configuration.GetSection("ClientRateLimiting"));
-            services.Configure<ClientRateLimitPolicies>(Configuration.GetSection("ClientRateLimitPolicies"));
-
-            // register stores
-            //services.AddInMemoryRateLimiting();
-            //services.AddDistributedRateLimiting<AsyncKeyLockProcessingStrategy>();
-            //services.AddDistributedRateLimiting<RedisProcessingStrategy>();
-            var redisOptions = ConfigurationOptions.Parse(Configuration["ConnectionStrings:Redis"]);
-            services.AddSingleton<IConnectionMultiplexer>(provider => ConnectionMultiplexer.Connect(redisOptions));
-            #region redis limiting registration
-            //services.AddRedisRateLimiting();  //uncomment this 
-            //OR 
-            //services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
-            services.AddSingleton<IClientPolicyStore, DistributedCacheClientPolicyStore>();
-            services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
-            //services.AddSingleton<IProcessingStrategy, RedisProcessingStrategy>();
-            services.AddSingleton<IProcessingStrategy, CongaRedisProcessingStrategy>();
+            Conga.Platform.Licencing.LicencingRegistration.Register(services, Configuration);
+            Conga.Platform.RateLimiting.RateLimitingRegistration.Register(services, Configuration);
 
 
-            //services.AddDistributedRateLimiting<RedisProcessingStrategy>();
-
-            #endregion
+            //Registrations(services);
 
             services.AddMvc((options) =>
             {
                 options.EnableEndpointRouting = false;
 
             }).AddNewtonsoftJson();
+           
+        }
 
+        private void Registrations(IServiceCollection services)
+        {
+            services.AddSingleton<ILicencingManager, LicencingManager>();
 
-            // configure the resolvers
+           
+            // configure client rate limiting middleware
+            services.Configure<ClientRateLimitOptions>(Configuration.GetSection("ClientRateLimiting"));
+            services.Configure<ClientRateLimitPolicies>(Configuration.GetSection("ClientRateLimitPolicies"));
+
+            // register stores
+           
+            var redisOptions = ConfigurationOptions.Parse(Configuration["ConnectionStrings:Redis"]);
+            services.AddSingleton<IConnectionMultiplexer>(provider => ConnectionMultiplexer.Connect(redisOptions));
+            #region redis limiting registration
+            
+            services.AddSingleton<IClientPolicyStore, DistributedCacheClientPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
+            services.AddSingleton<IProcessingStrategy, CongaRedisProcessingStrategy>();
+
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
