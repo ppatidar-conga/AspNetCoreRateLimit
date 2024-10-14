@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Linq;
 
 namespace Customization
 {
@@ -15,14 +16,10 @@ namespace Customization
             if (File.Exists("client.json"))
             {
                 var orgLicencesJson = File.ReadAllText("client.json");
-                //var tiers = new Dictionary<string, string>();
-                //tiers.Add("c1", "silver");
-                //tiers.Add("c2", "gold");
-                var tiers = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(orgLicencesJson);
-                //var tiers = JsonConvert.DeserializeObject<Dictionary<string, string>>(orgLicencesJson);
-                if (tiers.ContainsKey(OrgId))
+                var tiers = JsonSerializer.Deserialize<List<OrgAPITier>>(orgLicencesJson);
+                if (tiers.Any(x => x.OrgId == OrgId))
                 {
-                    return tiers[OrgId];
+                    return tiers.FirstOrDefault(x => x.OrgId == OrgId).APITier;
                 }
             }
             return defaultTier;

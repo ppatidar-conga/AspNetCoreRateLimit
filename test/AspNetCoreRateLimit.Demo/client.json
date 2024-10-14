@@ -1,4 +1,14 @@
-{
-  "c1": "silver",
-  "c2": "gold"
-}
+[
+  {
+    "OrgId": "c1",
+    "APITier": "gold"
+  },
+  {
+    "OrgId": "c2",
+    "APITier": "silver"
+  },
+  {
+    "OrgId": "anon",
+    "APITier": "silver"
+  }
+]

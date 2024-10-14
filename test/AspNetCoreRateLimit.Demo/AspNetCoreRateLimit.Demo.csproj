@@ -9,18 +9,18 @@
 
   <ItemGroup>
     <PackageReference Include="Ben.BlockingDetector" Version="0.0.4" />
-	  <PackageReference Include="Conga.Platform" Version="22.3.0.28" />
+	  <!--<PackageReference Include="Conga.Platform" Version="22.3.0.28" />
 	  <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
 	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
 	  <PackageReference Include="StackExchange.Redis" Version="2.5.43" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.3" />-->
   </ItemGroup>
 
   <ItemGroup>
-    <!--<ProjectReference Include="..\..\Customization\Customization.csproj" />
+    <ProjectReference Include="..\..\Customization\Customization.csproj" />
     <ProjectReference Include="..\..\src\AspNetCoreRateLimit.Redis\AspNetCoreRateLimit.Redis.csproj" />
-    <ProjectReference Include="..\..\src\AspNetCoreRateLimit\AspNetCoreRateLimit.csproj" />-->
+    <ProjectReference Include="..\..\src\AspNetCoreRateLimit\AspNetCoreRateLimit.csproj" />
   </ItemGroup>
 
 </Project>

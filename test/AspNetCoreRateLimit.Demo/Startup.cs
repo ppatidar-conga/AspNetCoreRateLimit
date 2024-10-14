@@ -1,8 +1,9 @@
 using AspNetCoreRateLimit.Redis;
 using Ben.Diagnostics;
-using Conga.Platform.Licencing;
-using Conga.Platform.Licencing.Interfaces;
-using Conga.Platform.RateLimiting.LimitCustomization;
+using Customization;
+//using Conga.Platform.Licencing;
+//using Conga.Platform.Licencing.Interfaces;
+//using Conga.Platform.RateLimiting.LimitCustomization;
 //using Customization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,17 +27,17 @@ namespace AspNetCoreRateLimit.Demo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            Conga.Platform.Licencing.LicencingRegistration.Register(services, Configuration);
-            Conga.Platform.RateLimiting.RateLimitingRegistration.Register(services, Configuration);
+           // Conga.Platform.Licencing.LicencingRegistration.Register(services, Configuration);
+           // Conga.Platform.RateLimiting.RateLimitingRegistration.Register(services, Configuration);
 
 
-            //Registrations(services);
+            Registrations(services);
 
             services.AddMvc((options) =>
             {
                 options.EnableEndpointRouting = false;
 
-            }).AddNewtonsoftJson();
+            });
            
         }
 
@@ -44,13 +45,14 @@ namespace AspNetCoreRateLimit.Demo
         {
             services.AddSingleton<ILicencingManager, LicencingManager>();
 
-           
             // configure client rate limiting middleware
             services.Configure<ClientRateLimitOptions>(Configuration.GetSection("ClientRateLimiting"));
             services.Configure<ClientRateLimitPolicies>(Configuration.GetSection("ClientRateLimitPolicies"));
 
             // register stores
-           
+            var sec1=Configuration.GetSection("ConnectionStrings");
+            var sec2 = Configuration.GetSection("ConnectionStrings2");
+
             var redisOptions = ConfigurationOptions.Parse(Configuration["ConnectionStrings:Redis"]);
             services.AddSingleton<IConnectionMultiplexer>(provider => ConnectionMultiplexer.Connect(redisOptions));
             #region redis limiting registration
